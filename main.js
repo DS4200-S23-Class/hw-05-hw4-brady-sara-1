@@ -2,7 +2,7 @@
 Sara & Brady */
 
 // declare constants
-const FRAME_HEIGHT = 200;
+const FRAME_HEIGHT = 500;
 const FRAME_WIDTH = 500;
 const MARGINS = {left: 50, right: 50,
 				top: 50, bottom: 50};
@@ -23,30 +23,48 @@ d3.csv("data/scatter-data.csv").then((data) => {
 
 	console.log(data);
 
-	// find the max x and y
-	const MAX_X = d3.max(data, (d) => {
-						return parseInt(d.x)
-		});
-	
-	// scaling function
-	const SCALE = d3.scaleLinear()
-						.domain([0, MAX_X])
-						.range([0, VIS_WIDTH])
+	// get max x and y values
+	const MAX_X = d3.max(data, d => {return parseInt(d.x)});
+	const MAX_Y = d3.max(data, d => {return parseInt(d.y)});
+
+	// scaling functions
+	const X_SCALE = d3.scaleLinear()
+						.domain([0, MAX_X + 1])
+	    				.range([0, VIS_WIDTH]);
+
+	// range has to go from big to small so that 
+	// the data is flipped along the y-axis (how a user would be 
+	//  used to seeing a plot)
+	const Y_SCALE = d3.scaleLinear()
+						.domain([0, MAX_Y + 1])
+	    				.range([VIS_HEIGHT, 0]);
 
 	// plot
-	// NOT WORKING RIGHT NOW :( only 3 points are showing					
-	FRAME1.selectAll("points")
-			.data(data)
-			.enter()
-			.append("circle")
-				.attr("cx", (d) => {
-					return (SCALE(parseInt(d.x)) + MARGINS.left)
-				})
-				.attr("cy", (d) => {
-					return (FRAME_HEIGHT - SCALE(parseInt(d.y)) + MARGINS.top)
+	FRAME1.selectAll(".point")
+					.data(data)
+	    			.enter().append("circle")
+	    						.attr("class", "point")
+	    						.attr("cx", d => {
+	    								return X_SCALE(parseInt(d.x)) + MARGINS.left
+	    							})
+	    						.attr("cy", d => {
+	    								return Y_SCALE(parseInt(d.y)) + MARGINS.top
+	    						})
+	    						.attr("r", 10);
 
-				})
-				.attr("r", 10)
-				.attr("class", "point");
-				
-})
+
+	// create x-axis
+	FRAME1.append("g")
+      		.attr("transform", "translate(" + 
+      			MARGINS.left+ "," + (MARGINS.top + VIS_HEIGHT) + ")")
+      			.call(d3.axisBottom(X_SCALE));
+
+	// create y-axis
+	FRAME1.append("g")
+      		.attr("transform", "translate(" + 
+      			MARGINS.left + "," + (MARGINS.top) + ")")
+      		.call(d3.axisLeft(Y_SCALE));
+
+
+
+});
