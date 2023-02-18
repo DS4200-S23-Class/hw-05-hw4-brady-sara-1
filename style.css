@@ -22,3 +22,12 @@ body {
 #col2 {
 	width: 40%;
 }
+
+circle:hover {
+	fill: orange;
+}
+
+.addBorder {
+	stroke: seagreen;
+	stroke-width: 4;
+}
