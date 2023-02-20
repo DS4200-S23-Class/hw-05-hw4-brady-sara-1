@@ -10,7 +10,7 @@ body {
 .centered{
 	text-align: center;
 }
-
+/* columns, one 60% one 40%*/
 .columns {
 	display: flex;
 }
@@ -22,12 +22,29 @@ body {
 #col2 {
 	width: 40%;
 }
-
+/* when user hovers over circle it becomes orange */
 circle:hover {
 	fill: orange;
 }
 
+/* border green */
 .addBorder {
 	stroke: seagreen;
 	stroke-width: 4;
+}
+
+
+/*hover for the barchart */
+rect:hover{
+	fill:lightblue;
+}
+
+/* tooltip styling */
+.tooltip {
+
+	position: absolute;
+	background-color: grey;
+	border: solid;
+	padding: 5px;
+
 }
