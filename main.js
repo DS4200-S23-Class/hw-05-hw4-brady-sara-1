@@ -135,3 +135,44 @@ d3.csv("data/scatter-data.csv").then((data) => {
 });
 
 
+
+// create a frame for second vis in column 1
+const FRAME2 = d3.select("#col1")
+					.append("svg")
+						.attr("height", FRAME_HEIGHT)
+						.attr("width", FRAME_WIDTH)
+						.attr("class", "frame");
+
+// read data from second file
+d3.csv("data/bar-data.csv").then((data) => {
+
+	console.log(data);
+
+	const MAX_Y2 = d3.max(data, (d) => {return parseInt(d.amount); });
+
+	const X_SCALE2 = d3.scaleBand()
+						.domain(data.map((d) => {return d.category}))
+						.range([0, VIS_WIDTH]);
+
+	const Y_SCALE2 = d3.scaleLinear()
+						.range([VIS_HEIGHT, 0])
+						.domain([0, MAX_Y2])
+
+	// plot
+	FRAME2.selectAll(".bar")
+					.data(data)
+	    			.enter().append("rect")
+	    						.attr("class", "bar")
+	    						.attr("x", d => {
+	    								return X_SCALE2(d.category) + MARGINS.left
+	    							})
+	    						.attr("y", d => {
+	    							return (Y_SCALE2(d.amount) + MARGINS.bottom)
+	    						})
+	    						.attr("width", X_SCALE2.bandwidth())
+	    						.attr("height", d => {
+	    							return (VIS_HEIGHT - Y_SCALE2(d.amount))
+	    						})
+
+
+	});
